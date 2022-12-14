@@ -1,34 +1,25 @@
-import express from "express";
 import { json } from "body-parser";
+import express from "express";
 import mongoose from 'mongoose';
-import { createInvoiceRouter } from "./routes/invoice/createInvoice";
-import { getAllInvoice } from "./routes/invoice/getAllInvoice";
-import { getInvoiceById } from "./routes/invoice/getInvoiceById"
-import { editInvoice } from "./routes/invoice/editInvoice";
-import { deleteOneInvoice } from "./routes/invoice/deleteOneInvoice";
-import { deleteAllInvoices } from "./routes/invoice/deleteAllInvoices";
+import { createMetadata } from "./routes/metadata/createMetadata";
+import { getMetadata } from "./routes/metadata/getMetadata";
+import { getMetadataByTimestamp } from "./routes/metadata/getMetadataByTimestamp";
 import { getTime } from "./tools/time";
-
 
 const app = express();
 
-
 app.use(json());
 
-// Invoice :
-app.use(createInvoiceRouter);
-app.use(getAllInvoice);
-app.use(getInvoiceById);
-app.use(editInvoice);
-app.use(deleteOneInvoice);
-app.use(deleteAllInvoices);
+// Images metadata:
+app.use(createMetadata);
+app.use(getMetadataByTimestamp);
+app.use(getMetadata);
 
-
-const start = async() => {
+const start = async(ip: string) => {
   try {
-    await mongoose.connect('mongodb://localhost:27017');
+    await mongoose.connect('mongodb://' + ip + ':27017');
     console.log(getTime()+"Connected to MongoDb");
-  } catch (err){
+  } catch (err) {
     console.error(err);
   }
 
@@ -37,6 +28,4 @@ const start = async() => {
   });
 }
 
-start();
-
-
+start('172.16.244.211');
